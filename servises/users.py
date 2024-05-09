@@ -16,8 +16,7 @@ class UserService:
             user = User(
                 id=id,
                 username=payload.username,
-                password=payload.password,
-                complited_tests=[]
+                password=payload.password
             )
             return db.add_user(user)
         raise HTTPException(status_code=400, detail="Пароли не совпадают.")

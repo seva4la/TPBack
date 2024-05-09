@@ -16,7 +16,6 @@ class TableUser(Base):
     id = Column("id", String, primary_key=True)
     username = Column("username", String)
     password = Column("password", String)
-    complited_tests = Column("complited_tests", JSON)
 
 
 engine = create_engine("sqlite:///db/users.db", echo=True)
@@ -30,7 +29,6 @@ def user_to_table_user(user: User) -> TableUser:
         id=user.id,
         username=user.username,
         password=user.password,
-        complited_tests=json.dumps(user.complited_tests)
     )
 
 
@@ -58,18 +56,18 @@ def auth_user(username, password) -> UserUpdate:
     raise HTTPException(status_code=400, detail="Неверный логин или пароль")
 
 
-def compl_test(id_test: str, id_user: str):
-    user = session.query(TableUser).filter_by(id=id_user).first()
-    test = json.loads(user.complited_tests)
-    test.append(id_test)
-    testjs = json.dumps(test)
-    user.complited_tests = testjs
-    session.commit()
+# def compl_test(id_test: str, id_user: str):
+#     user = session.query(TableUser).filter_by(id=id_user).first()
+#     test = json.loads(user.complited_tests)
+#     test.append(id_test)
+#     testjs = json.dumps(test)
+#     user.complited_tests = testjs
+#     session.commit()
 
 
-def test_id_list(id_user: str) -> JSON:
-    user = session.query(TableUser).filter_by(id=id_user).first()
-    return user.complited_tests
+# def test_id_list(id_user: str) -> JSON:
+#     user = session.query(TableUser).filter_by(id=id_user).first()
+#     return user.complited_tests
 
 
 def check_id(id_user, password):
@@ -77,3 +75,7 @@ def check_id(id_user, password):
     if user.password == password:
         return True
     raise HTTPException(status_code=400, detail="Пароль неправильный")
+
+
+def get_user_by_id(db: Session, user_id: str):
+    return db.query(TableUser).filter(TableUser.id == user_id).first()

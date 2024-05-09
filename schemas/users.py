@@ -1,13 +1,12 @@
 from typing import List
 
 import pydantic
-
+from schemas.categories import Categories, Task
 
 class User(pydantic.BaseModel):
     id: str
     username: str
     password: str
-    complited_tests: List[str]
 
 
 class UserUpdate(pydantic.BaseModel):
