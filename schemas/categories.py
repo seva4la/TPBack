@@ -17,7 +17,6 @@ class CategoriesCreate(BaseModel):
     title: str
     user_id: str
 
-
 class Categories(BaseModel):
     id: str
     title: str
@@ -27,14 +26,11 @@ class Categories(BaseModel):
     class Config:
         orm_mode = True
 
-
 class CategoriesPost(BaseModel):
     user_id: str
 
-
 class TaskPost(BaseModel):
     user_id: str
-
 
 class TaskCreate(BaseModel):
     title: str

@@ -6,6 +6,8 @@ from servises.categories import categories_service
 
 from schemas.categories import Categories, CategoriesCreate, TaskCreate, Task, CategoriesPost, TaskPost
 
+from typing import Optional
+
 router = APIRouter()
 
 
@@ -49,3 +51,47 @@ def create_task(task: TaskCreate):
     if category is None:
         raise HTTPException(status_code=404, detail="Category not found")
     return categories_service.task_create(task)
+
+
+from fastapi import Path
+
+
+@router.delete("/tasks/delete/{task_id}")
+def delete_task(task_id: str = Path(..., title="The ID of the task to delete")):
+    deleted_task = categories_service.delete_task_by_id(task_id)
+    if deleted_task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return {"message": "Task deleted successfully"}
+
+
+@router.delete("/categories/delete/{category_id}")
+def delete_category(category_id: str):
+    deleted_category = categories_service.delete_category_and_tasks(category_id)
+    if deleted_category is None:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return {"message": "Category and associated tasks deleted successfully"}
+
+
+@router.put("/categories/{category_id}")
+def update_category(
+        category_id: str,
+        title: Optional[str] = None,
+):
+    updated_category = categories_service.update_category(
+        category_id, title)
+    if updated_category is None:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return {"message": "Category updated successfully"}
+
+
+@router.put("/tasks/{task_id}")
+def update_task(
+        task_id: str,
+        title: Optional[str] = None,
+        description: Optional[str] = None
+):
+    updated_task = categories_service.update_task(
+        task_id, title, description)
+    if updated_task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return {"message": "Task updated successfully"}

@@ -51,4 +51,49 @@ class CategoriesService:
             id=UserWithId.id, password=UserWithId.password, username=UserWithId.username)
         return db.get_task_with_id(user)
 
+    def delete_task_by_id(self, task_id: str):
+        task = sql.db_categories.get_task_from_db_by_id(task_id)
+        if task:
+            sql.db_categories.delete_task_by_id(task_id)
+            return Task(**task.__dict__)
+        return None
+
+    def delete_category_and_tasks(self, category_id: str):
+        category = self.get_category_by_id(category_id)
+        if category is None:
+            return None
+        db.delete_category_and_tasks(category_id)
+        return category
+
+    def update_category(self, category_id: str, title: Optional[str] = None):
+        category = self.get_category_by_id(category_id)
+        if category is None:
+            return None
+
+        # Обновление названия и описания, если они переданы
+        if title:
+            category.title = title
+
+        # Сохранение изменений в базе данных
+        db.update_category(category)
+
+        return category
+
+    def update_task(self, task_id: str, title: Optional[str] = None, description: Optional[str] = None):
+        task = sql.db_categories.get_task_from_db_by_id(task_id)
+        if task is None:
+            return None
+
+        # Обновление названия и описания, если они переданы
+        if title is not None:
+            task.title = title
+        if description is not None:
+            task.description = description
+
+        # Сохранение изменений в базе данных
+        db.update_task(task)
+
+        return task
+
+
 categories_service: CategoriesService = CategoriesService()

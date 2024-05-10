@@ -32,20 +32,6 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-# def test_to_table_test(categ: Categories) -> TableCategories:
-#     return TableCategories(
-#         id=categ.id,
-#         title=categ.title,
-#         tasks=categ.tasks
-#     )
-#
-# def table_to_categories(categories: TableCategories) -> Categories:
-#     return Categories(
-#         id=categories.id,
-#         title=categories.title,
-#         tasks=categories.tasks
-#     )
-
 
 
 def createCategories(categ: Categories) -> Categories:
@@ -64,7 +50,6 @@ def createTask(task: Task) -> Task:
     session.add(table_test)
     session.commit()
     return task
-
 
 def get_categories_with_id(user: User):
     list_test = session.query(TableCategories).all()
@@ -98,6 +83,42 @@ def get_categories():
         list_test_mas.append(Categories(id=item.id, title=item.title, user_id=item.user_id, tasks=tasks))
     return list_test_mas
 
+
 def get_category_by_id(db: Session, category_id: str):
     return db.query(TableCategories).filter(TableCategories.id == category_id).first()
 
+
+def delete_task_by_id(task_id: str):
+    task = session.query(TableTask).filter(TableTask.id == task_id).first()
+    if task:
+        session.delete(task)
+        session.commit()
+
+
+def get_task_from_db_by_id(task_id: str):
+    return session.query(TableTask).filter(TableTask.id == task_id).first()
+
+
+def delete_category_and_tasks(category_id: str):
+    category = session.query(TableCategories).filter(TableCategories.id == category_id).first()
+    if category:
+        session.delete(category)
+        session.commit()
+
+
+def update_category(category: Categories):
+    category_in_db = session.query(TableCategories).filter(TableCategories.id == category.id).first()
+    if category_in_db:
+        if category.title:
+            category_in_db.title = category.title
+        session.commit()
+
+
+def update_task(task: Task):
+    task_in_db = session.query(TableTask).filter(TableTask.id == task.id).first()
+    if task_in_db:
+        if task.title is not None:
+            task_in_db.title = task.title
+        if task.description is not None:
+            task_in_db.description = task.description
+        session.commit()

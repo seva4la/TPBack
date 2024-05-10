@@ -76,6 +76,5 @@ def check_id(id_user, password):
         return True
     raise HTTPException(status_code=400, detail="Пароль неправильный")
 
-
 def get_user_by_id(db: Session, user_id: str):
     return db.query(TableUser).filter(TableUser.id == user_id).first()
