@@ -10,6 +10,7 @@ from typing import Optional
 
 router = APIRouter()
 
+from fastapi import Path
 
 @router.post("/categories/creates", response_model=CategoriesCreate)
 def categories_create(data: CategoriesCreate):
@@ -24,17 +25,17 @@ def categories_get():
     return categories_service.categories_get()
 
 
-@router.post("/categories/post_with_id", response_model=List[Categories])
-def categories_get_with_id(data: CategoriesPost):
-    user = categories_service.get_user_by_id(data.user_id)
+@router.get("/categories/get_with_id", response_model=List[Categories])
+def categories_get_with_id(user_id: str):
+    user = categories_service.get_user_by_id(user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return categories_service.categories_get_with_id(user)
 
 
-@router.post("/tasks/post_with_id", response_model=List[Task])
-def tasks_get_with_id(data: TaskPost):
-    user = categories_service.get_user_by_id(data.user_id)
+@router.get("/tasks/get_with_id", response_model=List[Task])
+def tasks_get_with_id(user_id: str):
+    user = categories_service.get_user_by_id(user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return categories_service.task_get_with_id(user)
@@ -53,8 +54,6 @@ def create_task(task: TaskCreate):
     return categories_service.task_create(task)
 
 
-from fastapi import Path
-
 
 @router.delete("/tasks/delete/{task_id}")
 def delete_task(task_id: str = Path(..., title="The ID of the task to delete")):
@@ -63,14 +62,12 @@ def delete_task(task_id: str = Path(..., title="The ID of the task to delete")):
         raise HTTPException(status_code=404, detail="Task not found")
     return {"message": "Task deleted successfully"}
 
-
 @router.delete("/categories/delete/{category_id}")
 def delete_category(category_id: str):
     deleted_category = categories_service.delete_category_and_tasks(category_id)
     if deleted_category is None:
         raise HTTPException(status_code=404, detail="Category not found")
     return {"message": "Category and associated tasks deleted successfully"}
-
 
 @router.put("/categories/{category_id}")
 def update_category(
