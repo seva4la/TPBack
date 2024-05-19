@@ -18,7 +18,7 @@ def categories_create(data: CategoriesCreate):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return categories_service.categories_create(data)
-
+ 
 
 @router.get("/categories/get", response_model=List[Categories])
 def categories_get():

@@ -40,7 +40,7 @@ class CategoriesService:
         if category:
             return Categories(id=category.id, title=category.title, tasks=[], user_id=category.user_id)
         return None
-
+ 
     def categories_get_with_id(self, UserWithId: User) -> Optional[User]:
         user = User(
             id=UserWithId.id, password=UserWithId.password, username=UserWithId.username)

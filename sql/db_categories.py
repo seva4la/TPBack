@@ -83,6 +83,7 @@ def get_categories():
             tasks.append(Task(**task.__dict__))
         list_test_mas.append(Categories(id=item.id, title=item.title, user_id=item.user_id, tasks=tasks))
     return list_test_mas
+ 
 
 def get_category_by_id(db: Session, category_id: str):
     return db.query(TableCategories).filter(TableCategories.id == category_id).first()
