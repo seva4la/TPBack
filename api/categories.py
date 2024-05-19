@@ -46,6 +46,7 @@ def create_task(task: TaskCreate):
     category = categories_service.get_category_by_id(task.category_id)
     user = categories_service.get_user_by_id(task.user_id)
 
+
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
 

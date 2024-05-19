@@ -16,6 +16,7 @@ class TableTask(Base):
     title = Column("title", String)
     description = Column("description", String)
     user_id = Column("user_id", String)
+    color = Column("column", String)
     category_id = Column(String, ForeignKey("categories.id"))
     category = relationship("TableCategories", back_populates="tasks")
 
@@ -46,7 +47,7 @@ def createTask(task: Task) -> Task:
         raise HTTPException(status_code=404, detail="Category not found")
 
     table_test = TableTask(id=task.id, title=task.title, description=task.description, category_id=task.category_id,
-                           user_id=task.user_id)
+                           user_id=task.user_id, color=task.color)
     session.add(table_test)
     session.commit()
     return task
@@ -69,7 +70,7 @@ def get_task_with_id(user: User):
     for item in list_test:
         if (item.user_id == user.id):
             list_test_mas.append(Task(id=item.id, title=item.title, user_id=item.user_id, description=item.description,
-                                      category_id=item.category_id))
+                                      category_id=item.category_id, color=item.color))
     return list_test_mas
 
 
@@ -83,10 +84,8 @@ def get_categories():
         list_test_mas.append(Categories(id=item.id, title=item.title, user_id=item.user_id, tasks=tasks))
     return list_test_mas
 
-
 def get_category_by_id(db: Session, category_id: str):
     return db.query(TableCategories).filter(TableCategories.id == category_id).first()
-
 
 def delete_task_by_id(task_id: str):
     task = session.query(TableTask).filter(TableTask.id == task_id).first()
@@ -94,10 +93,8 @@ def delete_task_by_id(task_id: str):
         session.delete(task)
         session.commit()
 
-
 def get_task_from_db_by_id(task_id: str):
     return session.query(TableTask).filter(TableTask.id == task_id).first()
-
 
 def delete_category_and_tasks(category_id: str):
     category = session.query(TableCategories).filter(TableCategories.id == category_id).first()
@@ -105,14 +102,12 @@ def delete_category_and_tasks(category_id: str):
         session.delete(category)
         session.commit()
 
-
 def update_category(category: Categories):
     category_in_db = session.query(TableCategories).filter(TableCategories.id == category.id).first()
     if category_in_db:
         if category.title:
             category_in_db.title = category.title
         session.commit()
-
 
 def update_task(task: Task):
     task_in_db = session.query(TableTask).filter(TableTask.id == task.id).first()

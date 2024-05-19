@@ -8,6 +8,7 @@ class Task(BaseModel):
     description: str
     category_id: str
     user_id: str
+    color: str
 
     class Config:
         orm_mode = True
@@ -29,11 +30,14 @@ class Categories(BaseModel):
 class CategoriesPost(BaseModel):
     user_id: str
 
+
 class TaskPost(BaseModel):
     user_id: str
+
 
 class TaskCreate(BaseModel):
     title: str
     description: str
     category_id: str
     user_id: str
+    color: str

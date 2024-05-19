@@ -26,7 +26,7 @@ class CategoriesService:
     def task_create(self, data: TaskCreate) -> Task:
         task = Task(
             id=str(uuid.uuid4()), title=data.title, description=data.description, category_id=data.category_id,
-            user_id=data.user_id)
+            user_id=data.user_id, color=data.color)
         return db.createTask(task)
 
     def get_user_by_id(self, user_id: str) -> Optional[User]:
@@ -94,6 +94,5 @@ class CategoriesService:
         db.update_task(task)
 
         return task
-
 
 categories_service: CategoriesService = CategoriesService()
